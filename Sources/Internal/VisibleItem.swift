@@ -87,7 +87,7 @@ extension VisibleItem {
     case pinnedDaysOfWeekRowSeparator
     case daysOfWeekRowSeparator(Month)
     case dayRange(DayRange)
-    case overlayItem(OverlaidItemLocation)
+    case overlayItem(OverlaidItemLocation, layer: Int = 0)
   }
 
 }

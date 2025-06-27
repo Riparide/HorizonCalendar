@@ -369,7 +369,7 @@ public final class CalendarViewContent {
       -> AnyCalendarItemModel)
     -> CalendarViewContent
   {
-    overlaidItemLocationsAndItemProvider = (overlaidItemLocations, overlayItemProvider)
+    overlaidItemLocationsAndItemProviders.append((overlaidItemLocations, overlayItemProvider))
     return self
   }
 
@@ -399,9 +399,9 @@ public final class CalendarViewContent {
   private(set) var dayRangesAndItemProvider: (
     dayRanges: Set<DayRange>,
     dayRangeItemProvider: (DayRangeLayoutContext) -> AnyCalendarItemModel)?
-  private(set) var overlaidItemLocationsAndItemProvider: (
-    overlaidItemLocations: Set<OverlaidItemLocation>,
-    overlayItemProvider: (OverlayLayoutContext) -> AnyCalendarItemModel)?
+  private(set) var overlaidItemLocationsAndItemProviders: [
+    (locations: Set<OverlaidItemLocation>, provider: (OverlayLayoutContext) -> AnyCalendarItemModel)
+  ] = []
 
   // MARK: Private
 

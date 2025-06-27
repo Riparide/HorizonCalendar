@@ -111,6 +111,27 @@ final class SubviewInsertionIndexTrackerTests: XCTestCase {
 
     XCTAssert(itemTypes == itemTypesToInsert.sorted(), "Incorrect subviews order.")
   }
+  
+  func testOverlayLayerOrder() {
+    let tracker = SubviewInsertionIndexTracker()
+
+    let layer0 = VisibleItem.ItemType.overlayItem(
+      .monthHeader(monthContainingDate: Date()),
+      layer: 0
+    )
+    let layer1 = VisibleItem.ItemType.overlayItem(
+      .monthHeader(monthContainingDate: Date()),
+      layer: 1
+    )
+
+    var items: [VisibleItem.ItemType] = []
+    for item in [layer0, layer1] {
+      let idx = tracker.insertionIndex(forSubviewWithCorrespondingItemType: item)
+      items.insert(item, at: idx)
+    }
+
+    XCTAssertEqual(items, [layer0, layer1], "Overlays should be ordered by their layer (lower first)")
+  }
 
   // MARK: Private
 

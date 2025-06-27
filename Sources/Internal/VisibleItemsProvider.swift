@@ -945,27 +945,25 @@ final class VisibleItemsProvider {
   }
 
   private func handleOverlayItemsIfNeeded(bounds: CGRect, context: inout VisibleItemsContext) {
-    guard
-      let (overlaidItemLocations, itemModelProvider) = content.overlaidItemLocationsAndItemProvider
-    else {
-      return
-    }
-
-    for overlaidItemLocation in overlaidItemLocations {
-      guard
-        let layoutContext = overlayLayoutContext(
-          for: overlaidItemLocation,
-          inBounds: bounds,
-          context: &context)
-      else {
-        continue
+    for (layerIndex, overlayProvider) in content.overlaidItemLocationsAndItemProviders.enumerated() {
+      let (overlaidItemLocations, itemModelProvider) = overlayProvider
+      
+      for overlaidItemLocation in overlaidItemLocations {
+        guard
+          let layoutContext = overlayLayoutContext(
+            for: overlaidItemLocation,
+            inBounds: bounds,
+            context: &context)
+        else {
+          continue
+        }
+        
+        context.visibleItems.insert(
+          VisibleItem(
+            calendarItemModel: itemModelProvider(layoutContext),
+            itemType: .overlayItem(overlaidItemLocation, layer: layerIndex),
+            frame: bounds))
       }
-
-      context.visibleItems.insert(
-        VisibleItem(
-          calendarItemModel: itemModelProvider(layoutContext),
-          itemType: .overlayItem(overlaidItemLocation),
-          frame: bounds))
     }
   }
 

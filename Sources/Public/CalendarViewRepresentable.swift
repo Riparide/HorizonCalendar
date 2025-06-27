@@ -110,9 +110,9 @@ public struct CalendarViewRepresentable: UIViewRepresentable {
   fileprivate var dateRangesAndItemProvider: (
     dayRanges: Set<ClosedRange<Date>>,
     dayRangeItemProvider: (DayRangeLayoutContext) -> AnyCalendarItemModel)?
-  fileprivate var overlaidItemLocationsAndItemProvider: (
-    overlaidItemLocations: Set<OverlaidItemLocation>,
-    overlayItemProvider: (OverlayLayoutContext) -> AnyCalendarItemModel)?
+  fileprivate var overlaidItemLocationsAndItemProviders: [
+    (locations: Set<OverlaidItemLocation>, provider: (OverlayLayoutContext) -> AnyCalendarItemModel)
+  ] = []
 
   fileprivate var daySelectionHandler: ((Day) -> Void)?
   fileprivate var multiDaySelectionDragHandler: ((Day, UIGestureRecognizer.State) -> Void)?
@@ -183,8 +183,8 @@ public struct CalendarViewRepresentable: UIViewRepresentable {
     if let (dateRanges, itemProvider) = dateRangesAndItemProvider {
       content = content.dayRangeItemProvider(for: dateRanges, itemProvider)
     }
-
-    if let (itemLocations, itemProvider) = overlaidItemLocationsAndItemProvider {
+      
+    for (itemLocations, itemProvider) in overlaidItemLocationsAndItemProviders {
       content = content.overlayItemProvider(for: itemLocations, itemProvider)
     }
 
@@ -642,7 +642,7 @@ extension CalendarViewRepresentable {
     -> Self
   {
     var view = self
-    view.overlaidItemLocationsAndItemProvider = (overlaidItemLocations, overlayItemProvider)
+    view.overlaidItemLocationsAndItemProviders.append((overlaidItemLocations, overlayItemProvider))
     return view
   }
 
